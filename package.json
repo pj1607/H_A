@@ -1,0 +1,47 @@
+{
+  "name": "health-assistant-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@headlessui/react": "^2.2.4",
+    "@tailwindcss/vite": "^4.1.8",
+    "axios": "^1.9.0",
+    "chart.js": "^4.5.0",
+    "date-fns": "^4.1.0",
+    "firebase": "^12.0.0",
+    "framer-motion": "^12.23.12",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.28",
+    "lucide-react": "^0.525.0",
+    "react": "^19.1.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-datepicker": "^8.4.0",
+    "react-dom": "^19.1.0",
+    "react-hot-toast": "^2.6.0",
+    "react-router-dom": "^7.6.2",
+    "react-toastify": "^11.0.5",
+    "react-transition-group": "^4.4.5",
+    "sonner": "^2.0.7",
+    "stopwords-en": "^0.3.0",
+    "tailwindcss": "^4.1.8",
+    "tesseract.js": "^6.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.0",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^5.0.2",
+    "eslint": "^9.25.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "vite": "^7.1.3"
+  }
+}

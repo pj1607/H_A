@@ -1,0 +1,88 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RuralBot - Health Assistant</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      background: #f7f7f7;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, select, textarea, button {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #ecf0f1;
+      border-radius: 10px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>RuralBot 🤖</h1>
+  <form id="healthForm">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="text" name="phone" placeholder="Phone Number" required>
+    <select name="lang" required>
+      <option value="en">English</option>
+      <option value="hi">Hindi</option>
+      <option value="bn">Bengali</option>
+      <option value="ta">Tamil</option>
+    </select>
+    <textarea name="question" placeholder="Describe your health concern..." rows="5" required></textarea>
+    <button type="submit">Ask Bot</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    const form = document.getElementById('healthForm');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const res = await fetch('http://localhost:8000/ask', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await res.json();
+      resultDiv.textContent = data.answer;
+    });
+  </script>
+</body>
+</html>

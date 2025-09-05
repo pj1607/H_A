@@ -1,0 +1,19 @@
+App/venv/
+
+# Ignore Node modules
+Health_Assistant/node_modules/
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+
+# Ignore build folder if created
+Health_Assistant/build/
+venv/
+.venv/ 
+.env
+*.pyc
+*.pyo
+*.pyd
+node_modules/
+App/node_modules/    
