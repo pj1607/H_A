@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+
 const API = import.meta.env.VITE_API;
+
 const ProfileSection = () => {
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
+  const [loading, setLoading] = useState(false); // loader state
   const [profile, setProfile] = useState({
     name: "",
     email: "",
@@ -32,6 +35,7 @@ const ProfileSection = () => {
 
   const saveChanges = () => {
     setEditing(false);
+    setLoading(true);
 
     // Save to local storage
     localStorage.setItem("user_name", profile.name);
@@ -40,8 +44,6 @@ const ProfileSection = () => {
     localStorage.setItem("userGender", profile.gender);
     localStorage.setItem("userAge", profile.age.toString());
     localStorage.setItem("userAddress", profile.address);
-
-    toast.success("Profile saved!");
 
     // Save to backend
     const payload = new FormData();
@@ -59,17 +61,20 @@ const ProfileSection = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log("Saved to backend:", data);
-        navigate("/home");
         toast.success("Profile updated successfully!");
+        navigate("/home");
       })
       .catch((err) => {
         console.error("Profile save failed:", err);
         toast.error("Failed to save profile");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
   return (
-    <div className=" text-gray-200 font-sans">
+    <div className="text-gray-200 font-sans">
       {/* Page Header */}
       <section className="py-6 text-center">
         <h1 className="text-3xl font-bold mb-2">
@@ -110,13 +115,19 @@ const ProfileSection = () => {
           {editing ? (
             <>
               <button
-                className="cursor-pointer bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-md text-sm transition shadow"
+                disabled={loading}
+                className={`cursor-pointer px-4 py-2 rounded-md text-sm transition shadow ${
+                  loading
+                    ? "bg-green-400/50 text-white cursor-not-allowed"
+                    : "bg-green-600 hover:bg-green-700 text-white"
+                }`}
                 onClick={saveChanges}
               >
-                Save
+                {loading ? "Saving..." : "Save"}
               </button>
               <button
-                className="cursor-pointer bg-gray-600 hover:bg-gray-700 text-white px-3 py-1.5 rounded-md text-sm transition shadow"
+                disabled={loading}
+                className="cursor-pointer bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm transition shadow disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={() => setEditing(false)}
               >
                 Cancel

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 const API = import.meta.env.VITE_API;
+
 const SymptomChecker = () => {
   const [query, setQuery] = useState("");
   const [answer, setAnswer] = useState("");
@@ -9,7 +10,8 @@ const SymptomChecker = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ name: "", phone: "", age: "", location: "" });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);          // existing: initial check loader
+  const [followLoading, setFollowLoading] = useState(false); // NEW: follow-up loader
   const [diagnosis, setDiagnosis] = useState([]);
   const [followUp, setFollowUp] = useState("");
   const [conversation, setConversation] = useState([]);
@@ -33,8 +35,7 @@ const SymptomChecker = () => {
     const updatedHistory = [...conversation, { role: "user", message: followUpReply }];
 
     setConversation(updatedHistory);
-    console.log("Sending follow-up count:", followUpCount);
-
+    setFollowLoading(true); // NEW: start loader
     try {
       const res = await fetch(`${API}/follow-up`, {
         method: "POST",
@@ -48,8 +49,6 @@ const SymptomChecker = () => {
       });
 
       const data = await res.json();
-      console.log("Backend response:", data);
-      console.log("Follow-up count:", followUpCount);
 
       if (data.emergency_asked !== undefined) {
         setEmergencyAsked(data.emergency_asked);
@@ -79,7 +78,6 @@ const SymptomChecker = () => {
       setFollowUp("");
 
       if (data.final && /doctor|remedy|specialist/i.test(followUpReply)) {
-        console.log(" Is result.final true?", data.final);
         setFinalSuggestion(data);
         const userInputMsgs = updatedHistory.filter((msg) => msg.role === "user");
         const symptoms = userInputMsgs.at(-1)?.message || "N/A";
@@ -116,6 +114,8 @@ const SymptomChecker = () => {
     } catch (err) {
       console.error("Follow-up failed:", err);
       toast.error("Follow-up failed");
+    } finally {
+      setFollowLoading(false); // NEW: stop loader
     }
   };
 
@@ -155,7 +155,6 @@ const SymptomChecker = () => {
       setFollowUp(result.follow_up_question);
       setFollowUpCount(0);
 
-      console.log("Is result.final true?", result.final);
       if (result.final) {
         setFinalSuggestion(result);
 
@@ -258,23 +257,22 @@ const SymptomChecker = () => {
   };
 
   return (
-    <div className="mt-10  text-gray-200 font-sans ">
+    <div className="mt-10 text-gray-200 font-sans">
       <div className="p-6 max-w-3xl mx-auto">
-
-         <h1 className="text-2xl md:text-3xl font-bold mb-2">
-     Symptom <span className="text-[#f43f5e]">Checker</span>
-    </h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-2">
+          Symptom <span className="text-[#f43f5e]">Checker</span>
+        </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
             placeholder="Describe your symptoms..."
-            className=" w-full px-4 py-3  mt-5 rounded-lg border border-gray-600 bg-[#1e293b] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f43f5e]"
+            className="w-full px-4 py-3 mt-5 rounded-lg border border-gray-600 bg-[#1e293b] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f43f5e]"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-   <button
-             type="submit"
+          <button
+            type="submit"
             disabled={loading}
             className={`cursor-pointer w-full py-3 rounded-lg font-semibold shadow-md transition transform hover:scale-[1.02] active:scale-95 ${
               loading
@@ -282,9 +280,15 @@ const SymptomChecker = () => {
                 : "bg-[#f43f5e] hover:bg-[#be123c] text-white"
             }`}
           >
-            {loading ? "Checking..." : " Check"}
+            {loading ? (
+              <span className="inline-flex items-center gap-2 justify-center">
+                <span className="w-4 h-4 border-2 border-white/70 border-t-transparent rounded-full animate-spin" />
+                Checking...
+              </span>
+            ) : (
+              "Check"
+            )}
           </button>
-      
         </form>
 
         {/* AI Advice (when answer present and not final suggestion) */}
@@ -342,12 +346,34 @@ const SymptomChecker = () => {
               onChange={(e) => setFollowUpReply(e.target.value)}
             />
 
-            <button
-              onClick={handleFollowUpReply}
-              className="cursor-pointer bg-[#f43f5e] text-white px-4 py-2 rounded hover:bg-[#be123c] active:scale-95 transition"
-            >
-              Submit Follow-up Answer
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleFollowUpReply}
+                disabled={followLoading}
+                className={`cursor-pointer px-4 py-2 rounded font-medium transition active:scale-95 ${
+                  followLoading
+                    ? "bg-gray-600 text-white cursor-not-allowed"
+                    : "bg-[#f43f5e] text-white hover:bg-[#be123c]"
+                }`}
+              >
+                {followLoading ? (
+                  <span className="inline-flex items-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/70 border-t-transparent rounded-full animate-spin" />
+                    Sending...
+                  </span>
+                ) : (
+                  "Submit Follow-up Answer"
+                )}
+              </button>
+
+              {/* Inline loader status */}
+              {followLoading && (
+                <div className="flex items-center gap-2 text-gray-300">
+                  <span className="w-4 h-4 border-2 border-[#f43f5e] border-t-transparent rounded-full animate-spin" />
+                  <span className="text-sm">Generating answer…</span>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -463,7 +489,7 @@ const SymptomChecker = () => {
                 </button>
                 <button
                   onClick={() => setShowModal(false)}
-                  className="cursor-pointerw-full mt-2 py-2 rounded-xl text-center text-gray-300 hover:text-gray-100 transition"
+                  className="cursor-pointer w-full mt-2 py-2 rounded-xl text-center text-gray-300 hover:text-gray-100 transition"
                 >
                   Cancel
                 </button>
