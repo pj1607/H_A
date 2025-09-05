@@ -176,14 +176,14 @@ const Chat = ({ messages, setMessages }) => {
         />
         <button
           onClick={handleSend}
-          className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-md"
+          className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-md"
         >
           <Send className="w-5 h-5" />
         </button>
         <button
           onClick={startVoiceInput}
           title="Tap to speak"
-          className={`p-3 rounded-full text-white shadow-md ${
+          className={`cursor-pointer p-3 rounded-full text-white shadow-md ${
             isListening ? "bg-red-500" : "bg-gray-700"
           }`}
         >

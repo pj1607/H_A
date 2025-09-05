@@ -31,7 +31,7 @@ const Sidebar = ({ startNewChat }) => {
     <div className="h-full overflow-y-auto p-4 bg-gradient-to-b from-gray-900 to-gray-800 border-r border-gray-700 rounded-xl shadow-xl">
       <button
         onClick={handleNewChatClick}
-        className={`mb-4 px-4 py-3 rounded-full text-white flex items-center justify-center gap-2 transition-all duration-200 ${
+        className={`cursor-pointer mb-4 px-4 py-3 rounded-full text-white flex items-center justify-center gap-2 transition-all duration-200 ${
           loading
             ? "bg-red-400 cursor-not-allowed"
             : "bg-red-500 hover:bg-red-600 hover:scale-105 shadow-xl"

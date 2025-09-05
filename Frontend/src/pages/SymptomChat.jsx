@@ -134,14 +134,14 @@ const SymptomChat = ({ messages, setMessages }) => {
         <div className="flex gap-2 w-full sm:w-auto justify-end">
           <button
             onClick={() => handleSend()}
-            className="flex items-center gap-2 bg-[#f43f5e] hover:bg-[#be123c] text-white px-4 py-2 rounded-lg font-medium shadow transition w-full sm:w-auto"
+            className="cursor-pointer flex items-center gap-2 bg-[#f43f5e] hover:bg-[#be123c] text-white px-4 py-2 rounded-lg font-medium shadow transition w-full sm:w-auto"
           >
             <Send className="w-4 h-4" /> Send
           </button>
           <button
             onClick={startVoiceInput}
             title="Tap to speak"
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white shadow transition ${
+            className={`cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white shadow transition ${
               isListening ? "bg-red-600" : "bg-gray-700 hover:bg-gray-600"
             }`}
           >

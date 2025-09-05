@@ -65,7 +65,7 @@ const UserProfile = () => {
       {appointments.length === 0 ? (
         <p>No appointments found.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="cursor-default grid grid-cols-1 md:grid-cols-2 gap-4">
           {appointments.map((appt) => (
             <div key={appt._id} className="bg-gray-800 p-4 rounded-xl shadow-xl">
               <div className="flex justify-between items-center">
@@ -87,13 +87,13 @@ const UserProfile = () => {
                     </span>
                   </p>
                 </div>
-                <img src="/doctor-placeholder.png" alt="Doctor" className="h-16 w-16 rounded-full object-cover" />
+              
               </div>
 
               <div className="mt-4 flex gap-2">
                 {formatStatus(appt.date) === "Upcoming" && (
                   <button
-                    className="bg-red-500 text-white px-3 py-1 rounded-xl hover:bg-red-600 active:scale-95 transition-all duration-200 shadow"
+                    className="cursor-pointer bg-red-500 text-white px-3 py-1 rounded-xl hover:bg-red-600 active:scale-95 transition-all duration-200 shadow"
                     onClick={() => { setToCancelId(appt._id); setShowModal(true); }}
                   >
                     Cancel
@@ -126,7 +126,7 @@ const UserProfile = () => {
           setShowModal(false);
           setToCancelId(null);
         }}
-        className="px-5 py-2.5 rounded-xl bg-red-600 text-white font-medium shadow-lg hover:bg-red-700 active:scale-95 transition duration-150"
+        className="cursor-pointer px-5 py-2.5 rounded-xl bg-red-600 text-white font-medium shadow-lg hover:bg-red-700 active:scale-95 transition duration-150"
       >
         Yes, Cancel
       </button>
@@ -135,7 +135,7 @@ const UserProfile = () => {
           setShowModal(false);
           setToCancelId(null);
         }}
-        className="px-5 py-2.5 rounded-xl bg-gray-700 text-gray-200 font-medium shadow-lg hover:bg-gray-600 active:scale-95 transition duration-150"
+        className="cursor-pointer px-5 py-2.5 rounded-xl bg-gray-700 text-gray-200 font-medium shadow-lg hover:bg-gray-600 active:scale-95 transition duration-150"
       >
         No, Keep It
       </button>

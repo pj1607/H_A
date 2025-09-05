@@ -110,13 +110,13 @@ const ProfileSection = () => {
           {editing ? (
             <>
               <button
-                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-md text-sm transition shadow"
+                className="cursor-pointer bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-md text-sm transition shadow"
                 onClick={saveChanges}
               >
                 Save
               </button>
               <button
-                className="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1.5 rounded-md text-sm transition shadow"
+                className="cursor-pointer bg-gray-600 hover:bg-gray-700 text-white px-3 py-1.5 rounded-md text-sm transition shadow"
                 onClick={() => setEditing(false)}
               >
                 Cancel
@@ -124,7 +124,7 @@ const ProfileSection = () => {
             </>
           ) : (
             <button
-              className="bg-[#f43f5e] hover:bg-[#be123c] text-white px-4 py-2 rounded-md text-sm transition shadow"
+              className="cursor-pointer bg-[#f43f5e] hover:bg-[#be123c] text-white px-4 py-2 rounded-md text-sm transition shadow"
               onClick={() => setEditing(true)}
             >
               Edit Profile

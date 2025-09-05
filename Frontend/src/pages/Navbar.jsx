@@ -59,7 +59,7 @@ const Navbar = () => {
           )}
           <button
             onClick={() => setShowConfirm(true)}
-            className="flex items-center gap-2 bg-[#f43f5e] text-white px-4 py-2 rounded-lg hover:bg-[#be123c] transition transform hover:scale-105 active:scale-95 shadow-md"
+            className="cursor-pointer flex items-center gap-2 bg-[#f43f5e] text-white px-4 py-2 rounded-lg hover:bg-[#be123c] transition transform hover:scale-105 active:scale-95 shadow-md"
           >
             <LogOut className="w-5 h-5" /> Logout
           </button>
@@ -92,13 +92,13 @@ const Navbar = () => {
             <div className="flex justify-center gap-4">
               <button
                 onClick={() => setShowConfirm(false)}
-                className="px-4 py-2 rounded-lg border border-gray-500 text-gray-300 hover:bg-gray-700 transition"
+                className="cursor-pointer px-4 py-2 rounded-lg border border-gray-500 text-gray-300 hover:bg-gray-700 transition"
               >
                 Cancel
               </button>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 rounded-lg bg-[#f43f5e] text-white hover:bg-[#be123c] transition transform hover:scale-105 active:scale-95 shadow-md"
+                className="cursor-pointer px-4 py-2 rounded-lg bg-[#f43f5e] text-white hover:bg-[#be123c] transition transform hover:scale-105 active:scale-95 shadow-md"
               >
                 Logout
               </button>

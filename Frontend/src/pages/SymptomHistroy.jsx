@@ -66,19 +66,19 @@ const SymptomHistory = ({ userPhone }) => {
                 <td className="p-2 border border-gray-700 space-x-2">
                   <div className="flex flex-col sm:flex-row flex-wrap gap-2">
                     <button
-                      className="bg-blue-500 hover:bg-blue-600 active:scale-95 transition-all px-3 py-1 text-white rounded-xl shadow"
+                      className="cursor-pointer bg-blue-500 hover:bg-blue-600 active:scale-95 transition-all px-3 py-1 text-white rounded-xl shadow"
                       onClick={() => openModal(r)}
                     >
                       View Report
                     </button>
                     <button
-                      className="bg-green-500 hover:bg-green-600 active:scale-95 transition-all px-3 py-1 text-white rounded-xl shadow"
+                      className="cursor-pointer bg-green-500 hover:bg-green-600 active:scale-95 transition-all px-3 py-1 text-white rounded-xl shadow"
                       onClick={() => ExportPDF(r)}
                     >
                       Export PDF
                     </button>
                     <button
-                      className="bg-red-500 hover:bg-red-600 active:scale-95 transition-all px-3 py-1 text-white rounded-xl shadow"
+                      className="cursor-pointer bg-red-500 hover:bg-red-600 active:scale-95 transition-all px-3 py-1 text-white rounded-xl shadow"
                       onClick={() => deleteReport(r._id)}
                     >
                       Delete
@@ -123,7 +123,7 @@ const SymptomHistory = ({ userPhone }) => {
                 <div className="mt-4 text-right">
                   <button
                     onClick={closeModal}
-                    className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-xl shadow"
+                    className="cursor-pointer bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-xl shadow"
                   >
                     Close
                   </button>

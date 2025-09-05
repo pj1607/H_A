@@ -81,7 +81,7 @@ const HospitalLocator = () => {
           <button
             onClick={fetchLocationAndPlaces}
             disabled={loading}
-            className={`px-6 py-2 rounded-lg font-semibold shadow-md transition transform hover:scale-[1.02] active:scale-95 ${
+            className={`cursor-pointer px-6 py-2 rounded-lg font-semibold shadow-md transition transform hover:scale-[1.02] active:scale-95 ${
               loading
                 ? "bg-gray-600 cursor-not-allowed"
                 : "bg-[#f43f5e] hover:bg-[#be123c] text-white"
@@ -142,7 +142,7 @@ const HospitalLocator = () => {
                         <div className="flex gap-4 mt-2 text-sm">
                           <button
                             onClick={() => setSelectedPlace(coords)}
-                            className="flex items-center gap-1 text-blue-400 hover:text-blue-300"
+                            className="cursor-pointer flex items-center gap-1 text-blue-400 hover:text-blue-300"
                           >
                             <Compass className="w-4 h-4" /> View on Map
                           </button>

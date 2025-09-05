@@ -151,7 +151,7 @@ const Home = () => {
         <div className="relative flex justify-center gap-4 animate-fadeIn delay-200 z-10">
           <button
             onClick={() => navigate("/symptom-checker")}
-            className="bg-[#f43f5e] hover:bg-[#be123c] text-white px-6 py-3 rounded-lg shadow-md transition transform hover:scale-105 active:scale-95"
+            className="cursor-pointer bg-[#f43f5e] hover:bg-[#be123c] text-white px-6 py-3 rounded-lg shadow-md transition transform hover:scale-105 active:scale-95"
           >
             Try Symptom Checker
           </button>
@@ -170,7 +170,7 @@ const Home = () => {
             </p>
             <button
               onClick={() => navigate("/appointment")}
-              className="bg-white/10 backdrop-blur-md text-white font-semibold px-6 py-3 rounded-xl border border-white/20 shadow-lg transition transform hover:scale-105 hover:bg-white/20 active:scale-95"
+              className="cursor-pointer bg-white/10 backdrop-blur-md text-white font-semibold px-6 py-3 rounded-xl border border-white/20 shadow-lg transition transform hover:scale-105 hover:bg-white/20 active:scale-95"
             >
               Book Now
             </button>
@@ -252,7 +252,7 @@ const Home = () => {
       </p>
       <button
         onClick={() => navigate("/medicalReport")}
-        className="bg-gradient-to-r from-pink-500 to-red-500 hover:from-red-500 hover:to-pink-500 text-white px-6 py-3 rounded-xl shadow-lg transition transform hover:scale-105 active:scale-95"
+        className="cursor-pointer bg-gradient-to-r from-pink-500 to-red-500 hover:from-red-500 hover:to-pink-500 text-white px-6 py-3 rounded-xl shadow-lg transition transform hover:scale-105 active:scale-95"
       >
         Try Medical Report Summary
       </button>

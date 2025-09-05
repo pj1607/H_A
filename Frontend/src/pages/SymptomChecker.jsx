@@ -269,14 +269,14 @@ const SymptomChecker = () => {
           <input
             type="text"
             placeholder="Describe your symptoms..."
-            className="w-full px-4 py-3  mt-5 rounded-lg border border-gray-600 bg-[#1e293b] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f43f5e]"
+            className=" w-full px-4 py-3  mt-5 rounded-lg border border-gray-600 bg-[#1e293b] text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f43f5e]"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
    <button
              type="submit"
             disabled={loading}
-            className={`w-full py-3 rounded-lg font-semibold shadow-md transition transform hover:scale-[1.02] active:scale-95 ${
+            className={`cursor-pointer w-full py-3 rounded-lg font-semibold shadow-md transition transform hover:scale-[1.02] active:scale-95 ${
               loading
                 ? "bg-gray-600 cursor-not-allowed"
                 : "bg-[#f43f5e] hover:bg-[#be123c] text-white"
@@ -344,7 +344,7 @@ const SymptomChecker = () => {
 
             <button
               onClick={handleFollowUpReply}
-              className="bg-[#f43f5e] text-white px-4 py-2 rounded hover:bg-[#be123c] active:scale-95 transition"
+              className="cursor-pointer bg-[#f43f5e] text-white px-4 py-2 rounded hover:bg-[#be123c] active:scale-95 transition"
             >
               Submit Follow-up Answer
             </button>
@@ -399,7 +399,7 @@ const SymptomChecker = () => {
                               })
                             }
                             disabled={isDisabled}
-                            className={`px-3 py-1 rounded text-sm transition ${
+                            className={`cursor-pointer px-3 py-1 rounded text-sm transition ${
                               isDisabled
                                 ? "bg-gray-600 text-white cursor-not-allowed"
                                 : "bg-green-500 text-white hover:bg-green-600 active:scale-95 shadow-sm"
@@ -457,13 +457,13 @@ const SymptomChecker = () => {
                 />
                 <button
                   onClick={bookAppointment}
-                  className="w-full bg-[#f43f5e] text-white font-medium px-4 py-2 rounded-xl mt-2 hover:bg-[#be123c] active:scale-95 transition-all duration-200 shadow-md"
+                  className="cursor-pointer w-full bg-[#f43f5e] text-white font-medium px-4 py-2 rounded-xl mt-2 hover:bg-[#be123c] active:scale-95 transition-all duration-200 shadow-md"
                 >
                   Confirm Booking
                 </button>
                 <button
                   onClick={() => setShowModal(false)}
-                  className="w-full mt-2 py-2 rounded-xl text-center text-gray-300 hover:text-gray-100 transition"
+                  className="cursor-pointerw-full mt-2 py-2 rounded-xl text-center text-gray-300 hover:text-gray-100 transition"
                 >
                   Cancel
                 </button>

@@ -3,6 +3,28 @@ import toast from "react-hot-toast";
 import { CalendarDays, Phone, MapPin, Stethoscope } from "lucide-react";
 const API = import.meta.env.VITE_API;
 
+import { Listbox } from "@headlessui/react";
+import { Check, ChevronDown } from "lucide-react";
+
+const ages = Array.from({ length: 100 }, (_, i) => i + 1);
+
+const cities = [
+  "Delhi",
+            "Mumbai",
+            "Bengaluru",
+            "Hyderabad",
+            "Chennai",
+            "Kolkata",
+            "Pune",
+            "Ahmedabad",
+            "Jaipur",
+            "Lucknow",
+            "Chandigarh",
+            "Indore",
+            "Surat",
+            "Bhopal",
+            "Nagpur",
+];
 
 const Appointment = () => {
   const [doctors, setDoctors] = useState([]);
@@ -244,57 +266,117 @@ const Appointment = () => {
         </section>
       )}
 
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-[#1e293b] p-8 rounded-2xl shadow-xl w-full max-w-md text-gray-200">
-            <h2 className="text-2xl font-bold mb-6 text-center text-[#f43f5e]">
-              Confirm Appointment
-            </h2>
-            <div className="space-y-4">
-              <input
-                type="number"
-                placeholder="Age"
-                value={formData.age}
-                onChange={(e) =>
-                  setFormData({ ...formData, age: e.target.value })
-                }
-                className="w-full px-4 py-2 rounded-lg bg-[#0f172a] border border-gray-600 focus:ring-2 focus:ring-[#f43f5e] outline-none"
-              />
-              <input
-                type="text"
-                placeholder="Location"
-                value={formData.location}
-                onChange={(e) =>
-                  setFormData({ ...formData, location: e.target.value })
-                }
-                className="w-full px-4 py-2 rounded-lg bg-[#0f172a] border border-gray-600 focus:ring-2 focus:ring-[#f43f5e] outline-none"
-              />
-              <button
-                onClick={bookAppointment}
-                disabled={bookingLoading}
-                className={`w-full py-2 rounded-lg font-semibold transition ${
-                  bookingLoading
-                    ? "bg-gray-600 cursor-not-allowed"
-                    : "bg-[#f43f5e] hover:bg-[#be123c] active:scale-95"
-                }`}
-              >
-                {bookingLoading ? "Booking..." : "Confirm Booking"}
-              </button>
-              <button
-                onClick={() => {
-                  setShowModal(false);
-                  setSelectedSlot(null);
-                  setFormData({ name: "", phone: "", age: "", location: "" });
-                }}
-                className="text-gray-400 w-full mt-2 hover:text-red-400"
-              >
-                Cancel
-              </button>
-            </div>
+     {/* Modal */}
+{showModal && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="bg-[#1e293b] p-8 rounded-2xl shadow-xl w-full max-w-md text-gray-200">
+      <h2 className="text-2xl font-bold mb-6 text-center text-[#f43f5e]">
+        Confirm Appointment
+      </h2>
+      <div className="space-y-4">
+
+        {/* Age Selector */}
+        <Listbox
+          value={formData.age}
+          onChange={(val) => setFormData({ ...formData, age: val })}
+        >
+          <div className="relative">
+            <Listbox.Button className="cursor-pointer  w-full px-4 py-2 rounded-lg bg-[#0f172a] border border-gray-600 flex justify-between items-center">
+              {formData.age || "Select Age"}
+              <ChevronDown className="w-4 h-4 text-gray-400" />
+            </Listbox.Button>
+            <Listbox.Options className="absolute z-10 mt-2 max-h-60 w-full overflow-auto rounded-lg bg-[#1e293b] shadow-lg border border-gray-600">
+              {ages.map((age) => (
+                <Listbox.Option
+                  key={age}
+                  value={age}
+                  className={({ active }) =>
+                    `cursor-pointer select-none px-4 py-2 ${
+                      active ? "bg-[#f43f5e] text-white" : "text-gray-200"
+                    }`
+                  }
+                >
+                  {({ selected }) => (
+                    <span
+                      className={`flex justify-between items-center ${
+                        selected ? "font-semibold" : ""
+                      }`}
+                    >
+                      {age}
+                      {selected && <Check className="w-4 h-4" />}
+                    </span>
+                  )}
+                </Listbox.Option>
+              ))}
+            </Listbox.Options>
           </div>
-        </div>
-      )}
+        </Listbox>
+
+        {/* Location Selector */}
+        <Listbox
+          value={formData.location}
+          onChange={(val) => setFormData({ ...formData, location: val })}
+        >
+          <div className="relative">
+            <Listbox.Button className="cursor-pointer w-full px-4 py-2 rounded-lg bg-[#0f172a] border border-gray-600 flex justify-between items-center">
+              {formData.location || "Select City"}
+              <ChevronDown className="w-4 h-4 text-gray-400" />
+            </Listbox.Button>
+            <Listbox.Options className="cursor-pointer absolute z-10 mt-2 max-h-60 w-full overflow-auto rounded-lg bg-[#1e293b] shadow-lg border border-gray-600">
+              {cities.map((city) => (
+                <Listbox.Option
+                  key={city}
+                  value={city}
+                  className={({ active }) =>
+                    `cursor-pointer select-none px-4 py-2 ${
+                      active ? "bg-[#f43f5e] text-white" : "text-gray-200"
+                    }`
+                  }
+                >
+                  {({ selected }) => (
+                    <span
+                      className={`flex justify-between items-center ${
+                        selected ? "font-semibold" : ""
+                      }`}
+                    >
+                      {city}
+                      {selected && <Check className="w-4 h-4" />}
+                    </span>
+                  )}
+                </Listbox.Option>
+              ))}
+            </Listbox.Options>
+          </div>
+        </Listbox>
+
+        {/* Confirm Button */}
+        <button
+          onClick={bookAppointment}
+          disabled={bookingLoading}
+          className={`cursor-pointer w-full py-2 rounded-lg font-semibold transition ${
+            bookingLoading
+              ? "bg-gray-600 cursor-not-allowed"
+              : "bg-[#f43f5e] hover:bg-[#be123c] active:scale-95"
+          }`}
+        >
+          {bookingLoading ? "Booking..." : "Confirm Booking"}
+        </button>
+
+        {/* Cancel Button */}
+        <button
+          onClick={() => {
+            setShowModal(false);
+            setSelectedSlot(null);
+            setFormData({ name: "", phone: "", age: "", location: "" });
+          }}
+          className="cursor-pointer text-gray-400 w-full mt-2 hover:text-red-400"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };

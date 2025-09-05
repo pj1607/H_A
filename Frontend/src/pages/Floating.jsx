@@ -8,9 +8,9 @@ const Floating = ({ messages, setMessages }) => {
 
   return (
     <>
-      {/* 💬 Floating Button */}
+
       <button
-        className="fixed bottom-4 right-4 bg-[#f43f5e] text-white p-3 rounded-full shadow-lg 
+        className="cursor-pointer fixed bottom-4 right-4 bg-[#f43f5e] text-white p-3 rounded-full shadow-lg 
                    z-50 hover:bg-[#be123c] transition transform hover:scale-110 active:scale-95"
         onClick={() => setOpen(!open)}
         title="Chat with AI Assistant"

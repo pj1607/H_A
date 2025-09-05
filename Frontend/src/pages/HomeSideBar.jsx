@@ -81,7 +81,7 @@ const HomeSideBar = ({ isOpen, setIsOpen, topOffset = 72,role }) => {
           <div className="flex justify-end p-4">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded hover:bg-gray-700 hover:text-white transition-colors duration-200"
+              className="cursor-pointer p-2 rounded hover:bg-gray-700 hover:text-white transition-colors duration-200"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>

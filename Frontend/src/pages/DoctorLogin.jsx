@@ -93,7 +93,7 @@ const DoctorLogin = () => {
       if (data.success) {
         toast.success("Doctor Logged in");
         localStorage.setItem("doctorContact", doctor.contact);
-        navigate("/home");
+        navigate("/doctor-dashboard");
       } else {
         toast.error(data.message || "Login failed");
       }
@@ -152,7 +152,7 @@ const DoctorLogin = () => {
                 onChange={(date) => setNewDate(date)}
                 dateFormat="dd/MM/yyyy"
                 minDate={new Date()}
-                className="border p-2 rounded-md w-full sm:w-[180px] text-sm bg-[#1e293b] text-gray-200 border-gray-600"
+                className="cursor-pointer border p-2 rounded-md w-full sm:w-[180px] text-sm bg-[#1e293b] text-gray-200 border-gray-600"
                 placeholderText="Date"
               />
 
@@ -164,14 +164,14 @@ const DoctorLogin = () => {
                 timeIntervals={30}
                 timeCaption="Time"
                 dateFormat="h:mm aa"
-                className="border p-2 rounded-md w-full sm:w-[140px] text-sm bg-[#1e293b] text-gray-200 border-gray-600"
+                className="cursor-pointer border p-2 rounded-md w-full sm:w-[140px] text-sm bg-[#1e293b] text-gray-200 border-gray-600"
                 placeholderText="Time"
               />
 
               <button
                 type="button"
                 onClick={addSlot}
-                className="bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-1.5 rounded-md transition shadow"
+                className="cursor-pointer bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-1.5 rounded-md transition shadow"
               >
                 Add
               </button>
@@ -201,7 +201,7 @@ const DoctorLogin = () => {
           <div className="flex justify-end pt-3">
             <button
               type="submit"
-              className="bg-[#f43f5e] hover:bg-[#be123c] text-white px-4 py-2 rounded-md text-sm transition shadow"
+              className="cursor-pointer bg-[#f43f5e] hover:bg-[#be123c] text-white px-4 py-2 rounded-md text-sm transition shadow"
             >
               Save & Login
             </button>

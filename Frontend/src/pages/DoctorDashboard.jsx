@@ -180,7 +180,7 @@ const DoctorDashboard = () => {
                 {formatStatus(appt.date, appt.time) === "Upcoming" && (
                   <>
                     <button
-                      className="bg-red-600 px-4 py-2 rounded-lg text-white hover:bg-red-700 transition"
+                      className="cursor-pointer bg-red-600 px-4 py-2 rounded-lg text-white hover:bg-red-700 transition"
                       onClick={() => {
                         setToCancelId(appt._id);
                         setShowModal(true);
@@ -189,7 +189,7 @@ const DoctorDashboard = () => {
                       Cancel
                     </button>
                     <button
-                      className="bg-yellow-500 px-4 py-2 rounded-lg text-white hover:bg-yellow-600 transition"
+                      className="cursor-pointer bg-yellow-500 px-4 py-2 rounded-lg text-white hover:bg-yellow-600 transition"
                       onClick={() => {
                         setRescheduleId(appt._id);
                         setShowRescheduleModal(true);
@@ -198,7 +198,7 @@ const DoctorDashboard = () => {
                       Reschedule
                     </button>
                     <button
-                      className="bg-green-600 px-4 py-2 rounded-lg text-white hover:bg-green-700 transition flex items-center gap-2"
+                      className="cursor-pointer bg-green-600 px-4 py-2 rounded-lg text-white hover:bg-green-700 transition flex items-center gap-2"
                       onClick={() =>
                         navigate(`/video-call?doctorId=${contact}`)
                       }
@@ -211,13 +211,13 @@ const DoctorDashboard = () => {
                 {appt.status === "Pending" && (
                   <>
                     <button
-                      className="bg-blue-600 px-3 py-2 rounded-lg text-white hover:bg-blue-700 transition flex items-center gap-2"
+                      className="cursor-pointer bg-blue-600 px-3 py-2 rounded-lg text-white hover:bg-blue-700 transition flex items-center gap-2"
                       onClick={() => handleStatusUpdate(appt._id, "Accepted")}
                     >
                       <CheckCircle2 className="w-4 h-4" /> Accept
                     </button>
                     <button
-                      className="bg-gray-600 px-3 py-2 rounded-lg text-white hover:bg-gray-700 transition flex items-center gap-2"
+                      className="cursor-pointer bg-gray-600 px-3 py-2 rounded-lg text-white hover:bg-gray-700 transition flex items-center gap-2"
                       onClick={() => handleStatusUpdate(appt._id, "Rejected")}
                     >
                       <XCircle className="w-4 h-4" /> Reject
