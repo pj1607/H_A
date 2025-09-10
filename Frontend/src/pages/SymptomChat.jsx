@@ -7,6 +7,8 @@ const API = import.meta.env.VITE_API;
 const SymptomChat = ({ messages, setMessages }) => {
   const [input, setInput] = useState("");
   const [isListening, setIsListening] = useState(false);
+  const [loading, setLoading] = useState(false);
+
 
   const phone = localStorage.getItem("phone");
   const messagesEndRef = useRef(null);
@@ -16,42 +18,51 @@ const SymptomChat = ({ messages, setMessages }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = async (textOverride = null) => {
-    const finalInput = textOverride !== null ? textOverride : input;
-    if (!finalInput.trim()) return;
-    if (finalInput === messages[messages.length - 1]?.text) return;
+const handleSend = async (textOverride = null) => {
+  const finalInput = textOverride !== null ? textOverride : input;
+  if (!finalInput.trim()) return;
+  if (finalInput === messages[messages.length - 1]?.text) return;
 
-    const newMessages = [...messages, { sender: "user", text: finalInput }];
-    setMessages(newMessages);
-    setInput("");
+  const newMessages = [...messages, { sender: "user", text: finalInput }];
+  setMessages(newMessages);
+  setInput("");
 
-    try {
-      const res = await fetch(
-          `${API}/chat-agent`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query: finalInput, phone }),
-        }
-      );
+  try {
+     setLoading(true);
+    const res = await fetch(`${API}/chat-agent`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: finalInput, phone }),
+    });
 
-      const data = await res.json();
-      const explanation = data.text || "No response from server.";
-      const ans =
-        typeof explanation === "object"
-          ? JSON.stringify(explanation, null, 2)
-          : String(explanation);
+    const data = await res.json();
 
-      const botMessage = { sender: "bot", text: ans };
-      setMessages((prev) => [...prev, botMessage]);
-    } catch (err) {
-      console.error("API Error:", err);
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: "Failed to get response" },
-      ]);
+    // Handle different backend responses safely
+    let explanation;
+    if (!data) {
+      explanation = "Server returned empty response.";
+    } else if (typeof data.text === "string" && data.text.trim()) {
+      explanation = data.text;
+    } else if (typeof data === "string") {
+      explanation = data;
+    } else {
+      explanation = "No medical history or reports found.";
     }
-  };
+
+    const botMessage = { sender: "bot", text: explanation };
+    setMessages((prev) => [...prev, botMessage]);
+
+  } catch (err) {
+    console.error("API Error:", err);
+    setMessages((prev) => [
+      ...prev,
+      { sender: "bot", text: "Failed to connect to server. Please try again." },
+    ]);
+  }
+   finally {
+  setLoading(false); 
+}
+};
 
   const startVoiceInput = () => {
     const SpeechRecognition =
@@ -116,6 +127,17 @@ const SymptomChat = ({ messages, setMessages }) => {
             </div>
           </div>
         ))}
+
+          {loading && (
+    <div className="flex justify-start">
+      <div className="px-4 py-3 rounded-2xl shadow text-sm max-w-[80%] sm:max-w-md bg-[#1e293b] border border-gray-700 text-gray-200 flex items-center gap-1">
+        <div className="w-1.5 h-3 bg-[#f43f5e] animate-[pulse_0.6s_ease-in-out_infinite]" />
+        <div className="w-1.5 h-5 bg-[#f43f5e] animate-[pulse_0.6s_ease-in-out_infinite_0.2s]" />
+        <div className="w-1.5 h-3 bg-[#f43f5e] animate-[pulse_0.6s_ease-in-out_infinite_0.4s]" />
+      </div>
+    </div>
+  )}
+
         {/* Dummy div to scroll into view */}
         <div ref={messagesEndRef} />
       </div>

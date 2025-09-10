@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 const API = import.meta.env.VITE_API;
-const Sidebar = ({ startNewChat }) => {
+
+const Sidebar = ({ startNewChat, onSelectHistory }) => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -49,6 +50,13 @@ const Sidebar = ({ startNewChat }) => {
           {history.map((item, idx) => (
             <li
               key={idx}
+              onClick={() =>
+                onSelectHistory &&
+                onSelectHistory([
+                  { sender: "user", text: item.question },
+                  { sender: "bot", text: item.answer },
+                ])
+              }
               className="bg-gradient-to-r from-gray-800 to-gray-900 p-3 rounded-xl shadow-xl hover:from-gray-700 hover:to-gray-800 cursor-pointer transition-colors"
             >
               <div className="font-medium text-sm text-gray-200 break-words">

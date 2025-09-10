@@ -7,7 +7,7 @@ import { Check, ChevronDown } from "lucide-react";
 const API = import.meta.env.VITE_API;
 
 const genders = ["Male", "Female", "Other"];
-const ages = Array.from({ length: 100 }, (_, i) => (i + 1).toString()); // 1 to 100
+const ages = Array.from({ length: 100 }, (_, i) => (i + 5).toString()); 
 
 const ProfileSection = () => {
   const navigate = useNavigate();
