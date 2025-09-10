@@ -16,38 +16,50 @@ const UserProfile = () => {
     { sender: "bot", text: "Hello! I'm MediConnect, view and manage your symptom history." },
   ]);
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        setLoadingAppointments(true);
-        const res = await fetch(`${API}/get-user-appointments?phone=${userPhone}`);
-        const data = await res.json();
-        if (data.appointments) setAppointments(data.appointments);
-      } catch {
-        toast.error("Failed to fetch appointments.");
-      } finally {
-        setLoadingAppointments(false);
-      }
-    };
-    fetchAppointments();
-  }, [userPhone]);
-
-  const cancelAppointment = async (id) => {
+useEffect(() => {
+  const fetchAppointments = async () => {
     try {
-      setCancelLoading(true);
-      const res = await fetch(`${API}/cancel-appointment/${id}`, { method: "DELETE" });
-      if (res.ok) {
-        toast.success("Appointment cancelled.");
-        setAppointments((prev) => prev.filter((appt) => appt._id !== id));
+      setLoadingAppointments(true);
+      const res = await fetch(`${API}/get-user-appointments?phone=${userPhone}`);
+      const data = await res.json();
+
+      if (data.appointments) {
+        setAppointments(data.appointments);
+      } else if (data.message) {
+        toast(data.message); 
       } else {
-        toast.error("Failed to cancel appointment.");
+        toast("No appointments found.");
       }
-    } catch {
-      toast.error("Error cancelling appointment.");
+    } catch (err) {
+      toast.error("Failed to fetch appointments.");
+      console.error(err);
     } finally {
-      setCancelLoading(false);
+      setLoadingAppointments(false);
     }
   };
+
+  fetchAppointments();
+}, [userPhone]);
+
+const cancelAppointment = async (id) => {
+  try {
+    setCancelLoading(true);
+    const res = await fetch(`${API}/cancel-appointment/${id}`, { method: "DELETE" });
+    const data = await res.json();
+
+    if (res.ok) {
+      toast.success(data.message || "Appointment cancelled.");
+      setAppointments((prev) => prev.filter((appt) => appt._id !== id));
+    } else {
+      toast.error(data.message || "Failed to cancel appointment.");
+    }
+  } catch (err) {
+    toast.error("Error cancelling appointment.");
+    console.error(err);
+  } finally {
+    setCancelLoading(false);
+  }
+};
 
   const formatStatus = (date) => {
     if (!date || typeof date !== "string") return "Invalid";
