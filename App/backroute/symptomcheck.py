@@ -14,14 +14,50 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 load_dotenv()
-api_key = os.getenv("GEMINI_API_KEY")  
-genai.configure(api_key=api_key)
 
-def ask_gpt(question: str, role_prompt: str = "You are a rural health advisor. Give safe, simple advice in English only.") -> str:
-    model = genai.GenerativeModel('models/gemini-1.5-flash')
-    prompt = f"{role_prompt}\nQ: {question}"
-    response = model.generate_content([prompt])
-    return response.text
+API_KEYS = [
+    os.getenv("GEMINI_API_KEY1"),
+    os.getenv("GEMINI_API_KEY2"),
+    os.getenv("GEMINI_API_KEY3"),
+    os.getenv("GEMINI_API_KEY4"),
+    os.getenv("GEMINI_API_KEY5"),
+]
+current_index = 0
+
+def configure_genai():
+    """Set the current API key for genai."""
+    global current_index
+    genai.configure(api_key=API_KEYS[current_index])
+
+def safe_gpt(prompt: str, role_prompt: str = "You are a rural health advisor. Give safe, simple advice in English only.") -> str:
+    global current_index
+    if not prompt.strip():
+        return "⚠️ Empty prompt given."
+    
+    full_prompt = f"{role_prompt}\nQ: {prompt}"
+    attempts = 0
+
+    while attempts < len(API_KEYS):
+        try:
+            configure_genai()
+            model = genai.GenerativeModel("models/gemini-1.5-flash")
+            response = model.generate_content([full_prompt])
+            return response.text.strip()
+        except Exception as e:
+            if "quota exceeded" in str(e).lower() or "limit" in str(e).lower():
+                current_index = (current_index + 1) % len(API_KEYS)
+                attempts += 1
+            else:
+                return f"⚠️ GPT error: {str(e)}"
+    
+    return "⚠️ All API keys have reached their limits."
+
+
+# def safe_gpt(question: str, role_prompt: str = "You are a rural health advisor. Give safe, simple advice in English only.") -> str:
+#     model = genai.GenerativeModel('models/gemini-1.5-flash')
+#     prompt = f"{role_prompt}\nQ: {question}"
+#     response = model.generate_content([prompt])
+#     return response.text
 
 RED_FLAG_SYMPTOMS = {
     "chest pain": "⚠️ Chest pain can be serious. Please consult a doctor immediately.",
@@ -59,14 +95,14 @@ VALID_SPECIALISTS = [
     "oncologist"
 ]
 
-def safe_gpt(prompt: str, role_prompt: str = "") -> str:
-    try:
-        if not prompt.strip():
-            return "⚠️ Empty prompt given."
-        response = ask_gpt(prompt, role_prompt).strip()
-        return response if response else "⚠️ No response received."
-    except Exception as e:
-        return f"⚠️ GPT error: {str(e)}"
+# def safe_gpt(prompt: str, role_prompt: str = "") -> str:
+#     try:
+#         if not prompt.strip():
+#             return "⚠️ Empty prompt given."
+#         response = safe_gpt(prompt, role_prompt).strip()
+#         return response if response else "⚠️ No response received."
+#     except Exception as e:
+#         return f"⚠️ GPT error: {str(e)}"
 
 
 

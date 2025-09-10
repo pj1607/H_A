@@ -25,8 +25,43 @@ load_dotenv()
 
 
 app=FastAPI()
-api_key= os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=api_key)
+
+API_KEYS = [
+   os.getenv("GEMINI_API_KEY1"),
+    os.getenv("GEMINI_API_KEY2"),
+    os.getenv("GEMINI_API_KEY3"),
+    os.getenv("GEMINI_API_KEY4"),
+    os.getenv("GEMINI_API_KEY5"),
+]
+current_index = 0
+
+def configure_genai():
+    """Set the current API key for genai."""
+    global current_index
+    genai.configure(api_key=API_KEYS[current_index])
+
+def safe_gpt(prompt: str, role_prompt: str = "") -> str:
+    global current_index
+    if not prompt.strip():
+        return "⚠️ Empty prompt given."
+    
+    full_prompt = f"{role_prompt}\nQ: {prompt}"
+    attempts = 0
+
+    while attempts < len(API_KEYS):
+        try:
+            configure_genai()
+            model = genai.GenerativeModel("models/gemini-1.5-flash")
+            response = model.generate_content([full_prompt])
+            return response.text.strip()
+        except Exception as e:
+            if "quota exceeded" in str(e).lower() or "limit" in str(e).lower():
+                current_index = (current_index + 1) % len(API_KEYS)
+                attempts += 1
+            else:
+                return f"⚠️ GPT error: {str(e)}"
+    
+    return "⚠️ All API keys have reached their limits."
 
 
 # MongoDB setup
@@ -189,7 +224,7 @@ Keep response under 5 lines. Use emojis.
 If report is unclear, say: "⚠️ Could not understand this report."
 """
     
-    summary=ask_gpt(question=ocr_text,role_prompt=role_prompt)
+    summary=safe_gpt(question=ocr_text,role_prompt=role_prompt)
     med_collection.insert_one({
         "phone": phone,
         "summary": summary,
@@ -229,7 +264,7 @@ Use empathetic and simple language.
 Avoid giving false hope. No prescriptions.
 Just tell the issue, cause (if known), and what to do.
 """
-    return ask_gpt(prompt,role_prompt="You are a doctor.Summarize the following health chat in 3-4 short lines.")
+    return safe_gpt(prompt,role_prompt="You are a doctor.Summarize the following health chat in 3-4 short lines.")
 
 
 @app.post("/save-report")
@@ -392,7 +427,7 @@ def translate(text:str,dest:str="en")->str:
     return model.generate_content(prompt).text.strip()
 
 
-def ask_gpt(question: str, role_prompt: str ="you are a rural health advisor give advice to health related in friendly way.") -> str:
+def safe_gpt(question: str, role_prompt: str ="you are a rural health advisor give advice to health related in friendly way.") -> str:
     model = genai.GenerativeModel('models/gemini-1.5-flash')
     prompt = f"{role_prompt}\nQ: {question}"
     response = model.generate_content([prompt])
