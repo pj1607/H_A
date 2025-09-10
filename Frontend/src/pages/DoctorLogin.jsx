@@ -3,7 +3,23 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Listbox } from "@headlessui/react";
+import { Check, ChevronDown } from "lucide-react";
+
 const API = import.meta.env.VITE_API;
+
+const indianCities = [
+  "Mumbai","Delhi","Bangalore","Hyderabad","Ahmedabad","Chennai","Kolkata","Pune",
+  "Jaipur","Lucknow","Kanpur","Nagpur","Indore","Thane","Bhopal","Visakhapatnam",
+  "Patna","Vadodara","Ghaziabad","Ludhiana"
+];
+
+const specializations = [
+  "Cardiologist","Dermatologist","Neurologist","Orthopedist","Pulmonologist",
+  "Endocrinologist","Therapist","General Physician","ENT","Gastroenterologist",
+  "Psychiatrist","Urologist","Gynecologist","Oncologist"
+];
+
 const DoctorLogin = () => {
   const navigate = useNavigate();
 
@@ -117,28 +133,110 @@ const DoctorLogin = () => {
       <div className="max-w-xl mx-auto bg-[#0f172a] border border-gray-700 rounded-xl shadow-md p-4 space-y-4">
         {/* Profile Fields */}
         <form onSubmit={handleSubmit} className="space-y-3">
-          {[
-            { name: "name", label: "Full Name" },
-            { name: "specialization", label: "Specialization" },
-            { name: "city", label: "City" },
-            { name: "contact", label: "Contact Number" },
-            { name: "fee", label: "Consultation Fee" },
-          ].map((field) => (
-            <div key={field.name}>
-              <label className="block text-xs font-medium text-gray-400 mb-1">
-                {field.label}
-              </label>
-              <input
-                type="text"
-                name={field.name}
-                placeholder={field.label}
-                value={doctor[field.name]}
-                onChange={handleChange}
-                required
-                className="w-full px-2 py-1.5 border border-gray-600 bg-[#1e293b] text-gray-200 rounded-md shadow-sm text-sm focus:ring-[#f43f5e] focus:border-[#f43f5e] outline-none"
-              />
-            </div>
-          ))}
+          <div>
+            <label className="block text-xs font-medium text-gray-400 mb-1">
+              Full Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              value={doctor.name}
+              onChange={handleChange}
+              required
+              className="w-full px-2 py-1.5 border border-gray-600 bg-[#1e293b] text-gray-200 rounded-md shadow-sm text-sm focus:ring-[#f43f5e] focus:border-[#f43f5e] outline-none"
+            />
+          </div>
+
+          {/* Specialization */}
+          <div>
+            <label className="block text-xs font-medium text-gray-400 mb-1">
+              Specialization
+            </label>
+            <Listbox value={doctor.specialization} onChange={(val) => setDoctor({...doctor, specialization: val})}>
+              <div className="relative">
+                <Listbox.Button className="w-full px-2 py-1.5 border border-gray-600 bg-[#1e293b] text-gray-200 rounded-md text-left text-sm flex justify-between items-center focus:ring-[#f43f5e] focus:border-[#f43f5e]">
+                  {doctor.specialization || "Select Specialization"}
+                  <ChevronDown className="w-4 h-4" />
+                </Listbox.Button>
+                <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-[#1e293b] border border-gray-600 text-sm shadow-lg">
+                  {specializations.map((spec) => (
+                    <Listbox.Option key={spec} value={spec} className={({active}) =>
+                      `cursor-pointer px-2 py-1 ${active ? "bg-[#f43f5e] text-white" : "text-gray-200"}`
+                    }>
+                      {({selected}) => (
+                        <div className="flex justify-between items-center">
+                          {spec}
+                          {selected && <Check className="w-4 h-4 text-green-400" />}
+                        </div>
+                      )}
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </div>
+            </Listbox>
+          </div>
+
+          {/* City */}
+          <div>
+            <label className="block text-xs font-medium text-gray-400 mb-1">
+              City
+            </label>
+            <Listbox value={doctor.city} onChange={(val) => setDoctor({...doctor, city: val})}>
+              <div className="relative">
+                <Listbox.Button className="w-full px-2 py-1.5 border border-gray-600 bg-[#1e293b] text-gray-200 rounded-md text-left text-sm flex justify-between items-center focus:ring-[#f43f5e] focus:border-[#f43f5e]">
+                  {doctor.city || "Select City"}
+                  <ChevronDown className="w-4 h-4" />
+                </Listbox.Button>
+                <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-[#1e293b] border border-gray-600 text-sm shadow-lg">
+                  {indianCities.map((city) => (
+                    <Listbox.Option key={city} value={city} className={({active}) =>
+                      `cursor-pointer px-2 py-1 ${active ? "bg-[#f43f5e] text-white" : "text-gray-200"}`
+                    }>
+                      {({selected}) => (
+                        <div className="flex justify-between items-center">
+                          {city}
+                          {selected && <Check className="w-4 h-4 text-green-400" />}
+                        </div>
+                      )}
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </div>
+            </Listbox>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <label className="block text-xs font-medium text-gray-400 mb-1">
+              Contact Number
+            </label>
+            <input
+              type="text"
+              name="contact"
+              placeholder="Contact Number"
+              value={doctor.contact}
+              onChange={handleChange}
+              required
+              className="w-full px-2 py-1.5 border border-gray-600 bg-[#1e293b] text-gray-200 rounded-md shadow-sm text-sm focus:ring-[#f43f5e] focus:border-[#f43f5e] outline-none"
+            />
+          </div>
+
+          {/* Fee */}
+          <div>
+            <label className="block text-xs font-medium text-gray-400 mb-1">
+              Consultation Fee
+            </label>
+            <input
+              type="text"
+              name="fee"
+              placeholder="Consultation Fee"
+              value={doctor.fee}
+              onChange={handleChange}
+              required
+              className="w-full px-2 py-1.5 border border-gray-600 bg-[#1e293b] text-gray-200 rounded-md shadow-sm text-sm focus:ring-[#f43f5e] focus:border-[#f43f5e] outline-none"
+            />
+          </div>
 
           {/* Slot Section */}
           <div>

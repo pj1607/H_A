@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import toast from "react-hot-toast";
 const API = import.meta.env.VITE_API;
 
@@ -10,8 +10,8 @@ const SymptomChecker = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ name: "", phone: "", age: "", location: "" });
-  const [loading, setLoading] = useState(false);          // existing: initial check loader
-  const [followLoading, setFollowLoading] = useState(false); // NEW: follow-up loader
+  const [loading, setLoading] = useState(false);          
+  const [followLoading, setFollowLoading] = useState(false); 
   const [diagnosis, setDiagnosis] = useState([]);
   const [followUp, setFollowUp] = useState("");
   const [conversation, setConversation] = useState([]);
@@ -21,6 +21,12 @@ const SymptomChecker = () => {
   const [showDoctors, setShowDoctors] = useState(false);
   const [emergencyAsked, setEmergencyAsked] = useState(false);
   const userPhone = localStorage.getItem("phone");
+
+    const conversationEndRef = useRef(null);
+
+    useEffect(() => {
+    conversationEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [conversation]);
 
   useEffect(() => {
     const lastUserMsg = conversation.slice().reverse().find((msg) => msg.role === "user");
@@ -319,6 +325,7 @@ const SymptomChecker = () => {
               {msg.message}
             </div>
           ))}
+            <div ref={conversationEndRef} />
         </div>
 
         {/* Final suggestion / doctor's available */}
@@ -445,7 +452,7 @@ const SymptomChecker = () => {
 
         {/* Booking Modal */}
         {showModal && (
-          <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
             <div className="bg-[#1e293b] rounded-2xl shadow-xl w-full max-w-md px-6 py-8 transition-all border border-gray-700">
               <h2 className="text-2xl font-semibold mb-6 text-center text-gray-100">Book Appointment</h2>
               <div className="space-y-4">
