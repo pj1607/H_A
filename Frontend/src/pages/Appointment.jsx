@@ -6,7 +6,7 @@ const API = import.meta.env.VITE_API;
 import { Listbox } from "@headlessui/react";
 import { Check, ChevronDown } from "lucide-react";
 
-const ages = Array.from({ length: 100 }, (_, i) => i + 1);
+const ages = Array.from({ length: 100 }, (_, i) => i + 5);
 
 const cities = [
   "Delhi",
