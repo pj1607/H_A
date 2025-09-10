@@ -9,18 +9,31 @@ const SymptomHistory = ({ userPhone }) => {
   const [reports, setReports] = useState([]);
   const [selectedReport, setSelectedReport] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [reportToDelete, setReportToDelete] = useState(null);
 
-  useEffect(() => {
-    const fetchReport = async () => {
+  // Fetch reports
+  const fetchReports = async () => {
+    setLoading(true);
+    try {
       const res = await fetch(`${API}/get-reports`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: userPhone })
+        body: JSON.stringify({ phone: userPhone }),
       });
       const data = await res.json();
       setReports(data.reports || []);
-    };
-    fetchReport();
+    } catch (err) {
+      toast.error("Failed to fetch reports.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReports();
   }, [userPhone]);
 
   const closeModal = () => setIsOpen(false);
@@ -29,19 +42,46 @@ const SymptomHistory = ({ userPhone }) => {
     setIsOpen(true);
   };
 
-  const deleteReport = async (id) => {
-    const re = await fetch(`${API}/delete-report/${id}`, { method: "DELETE" });
-    if (re.ok) {
-      toast.success("Report deleted successfully");
-      setReports(reports.filter((rep) => rep._id !== id));
-    } else {
-      toast.error("Failed to delete report.");
+  const openDeleteModal = (report) => {
+    setReportToDelete(report);
+    setDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setReportToDelete(null);
+    setDeleteModalOpen(false);
+  };
+
+  // Delete report
+  const deleteReport = async () => {
+    if (!reportToDelete) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch(`${API}/delete-report/${reportToDelete._id}`, { method: "DELETE" });
+      if (res.ok) {
+        toast.success("Report deleted successfully");
+        setReports(reports.filter((rep) => rep._id !== reportToDelete._id));
+        closeDeleteModal();
+      } else {
+        toast.error("Failed to delete report.");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error deleting report.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="p-4 bg-gradient-to-b from-gray-900 to-gray-800 rounded-xl shadow-xl text-gray-200">
       <h2 className="text-xl font-bold mb-4">🧾 Symptom Checker History</h2>
+
+      {/* Loading indicator */}
+      {loading && (
+        <div className="mb-2 text-sm text-gray-400">Loading...</div>
+      )}
 
       <div className="overflow-auto max-h-[400px] border border-gray-700 rounded-xl shadow-xl">
         <table className="min-w-full text-left border-collapse">
@@ -79,7 +119,7 @@ const SymptomHistory = ({ userPhone }) => {
                     </button>
                     <button
                       className="cursor-pointer bg-red-500 hover:bg-red-600 active:scale-95 transition-all px-3 py-1 text-white rounded-xl shadow"
-                      onClick={() => deleteReport(r._id)}
+                      onClick={() => openDeleteModal(r)}
                     >
                       Delete
                     </button>
@@ -126,6 +166,49 @@ const SymptomHistory = ({ userPhone }) => {
                     className="cursor-pointer bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-xl shadow"
                   >
                     Close
+                  </button>
+                </div>
+              </Dialog.Panel>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+
+      {/* Delete Confirm Modal */}
+      <Transition appear show={deleteModalOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={closeDeleteModal}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/50" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4">
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-gray-900 p-6 text-left shadow-xl transition-all text-gray-200">
+                <Dialog.Title className="text-lg font-bold mb-4">Confirm Delete</Dialog.Title>
+                <p>Are you sure you want to delete this report? This action cannot be undone.</p>
+                <div className="mt-4 flex justify-end gap-2">
+                  <button
+                    onClick={closeDeleteModal}
+                    className=" cursor-pointer px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-xl text-white shadow"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={deleteReport}
+                    className={`cursor-pointer px-4 py-2 bg-red-500 hover:bg-red-600 rounded-xl text-white shadow ${
+                      loading ? "opa city-50 cursor-not-allowed" : ""
+                    }`}
+                    disabled={loading}
+                  >
+                    {loading ? "Deleting..." : "Delete"}
                   </button>
                 </div>
               </Dialog.Panel>

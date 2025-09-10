@@ -13,7 +13,7 @@ const UserProfile = () => {
   const [loadingAppointments, setLoadingAppointments] = useState(true); // Loader for fetching
   const [cancelLoading, setCancelLoading] = useState(false); // Loader for cancel action
   const [messages, setMessages] = useState([
-    { sender: "bot", text: "Hello! I'm MediConnect. How can I help you today?" },
+    { sender: "bot", text: "Hello! I'm MediConnect, view and manage your symptom history." },
   ]);
 
   useEffect(() => {
