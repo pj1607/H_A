@@ -180,24 +180,46 @@ async def reschedule_appointment(id:str,payload:RescheduleUpdate):
 
 
 @app.post("/chat-agent")
-async def chat_agent(request:Request):
-    data=await request.json()
-    print("data",data)
-    user_query=data.get("query")
-    phone=data.get("phone")
+async def chat_agent(request: Request):
+    data = await request.json()
+    user_query = data.get("query")
+    phone = data.get("phone")
     full_prompt = f"{user_query}\nPhone: {phone}"
+
     try:
+        # Get bot response
         response = health_agent.invoke(full_prompt)
         if isinstance(response, dict):
             response = response.get("output", str(response))
-        chat_histroy.insert_one({
-            "phone": phone,
-            "query": user_query,
-            "answer": response,
-            "source": "chat-agent",
-            "created_at": datetime.now().isoformat()
-        })
-        return { "text": response }
+
+        # Find existing session for this phone
+        existing_chat = chat_histroy.find_one({"phone": phone}, sort=[("created_at", -1)])
+
+        if existing_chat:
+            # Append new messages
+            chat_histroy.update_one(
+                {"_id": existing_chat["_id"]},
+                {"$push": {
+                    "messages": {
+                        "$each": [
+                            {"sender": "user", "text": user_query, "timestamp": datetime.now().isoformat()},
+                            {"sender": "bot", "text": response, "timestamp": datetime.now().isoformat()}
+                        ]
+                    }
+                }}
+            )
+        else:
+            # Create new session
+            chat_histroy.insert_one({
+                "phone": phone,
+                "messages": [
+                    {"sender": "user", "text": user_query, "timestamp": datetime.now().isoformat()},
+                    {"sender": "bot", "text": response, "timestamp": datetime.now().isoformat()}
+                ],
+                "created_at": datetime.now().isoformat()
+            })
+
+        return {"text": response}
 
     except Exception as e:
         return {"error": str(e)}
@@ -288,7 +310,7 @@ async def get_reports(request: PhoneRequest):
         report["_id"]=str(report["_id"])
     return {"reports":reports}
 
-@app.delete("delete-report/{rep_id}")
+@app.delete("/delete-report/{rep_id}")
 async def delete_report(rep_id:str):
     re=report_collection.delete_one({"_id":ObjectId(rep_id)})
     if re.deleted_count == 1:
@@ -446,18 +468,31 @@ async def nearby_places(data:LocationInput):
     }
 
 @app.get("/history")
-async def get_chat_history(phone:str):
+async def get_chat_history(phone: str):
     print(f"📞 Fetching history for phone: {phone}")
     chats = list(chat_histroy.find({"phone": phone}).sort("created_at", -1))
+
     history = [
         {
-            "question": chat["query"],
-            "answer": chat["answer"],
+            "id": str(chat["_id"]),       # for delete
+            "messages": chat.get("messages", []),
             "created_at": chat["created_at"]
         }
         for chat in chats
     ]
     return JSONResponse(content={"history": history})
+
+@app.delete("/history/{chat_id}")
+async def delete_chat(chat_id: str):
+    try:
+        result = chat_histroy.delete_one({"_id": ObjectId(chat_id)})
+        if result.deleted_count == 1:
+            return {"success": True}
+        else:
+            return {"success": False, "message": "Chat not found"}
+    except Exception as e:
+        return {"success": False, "message": str(e)}
+
 
 
 
