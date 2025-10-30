@@ -33,7 +33,7 @@ def safe_gpt(prompt: str, role_prompt: str = "") -> str:
     while attempts < len(API_KEYS):
         try:
             configure_genai()
-            model = genai.GenerativeModel("models/gemini-1.5-flash")
+            model = genai.GenerativeModel("models/gemini-2.5-flash")
             response = model.generate_content([full_prompt])
             return response.text.strip()
         except Exception as e:

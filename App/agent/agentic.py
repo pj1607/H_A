@@ -3,7 +3,7 @@ from backroute.health_agents import health_summary, report_diff, doctor_availabi
 from langchain_google_genai import ChatGoogleGenerativeAI  
 
 llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",  # or gemini-1.5-pro
+    model="gemini-2.5-flash",  # or gemini-1.5-pro
     temperature=0.3,
 )
 tools = [health_summary, report_diff,doctor_availability_tool]

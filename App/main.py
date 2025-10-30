@@ -51,7 +51,7 @@ def safe_gpt(prompt: str, role_prompt: str = "") -> str:
     while attempts < len(API_KEYS):
         try:
             configure_genai()
-            model = genai.GenerativeModel("models/gemini-1.5-flash")
+            model = genai.GenerativeModel("models/gemini-2.5-flash")
             response = model.generate_content([full_prompt])
             return response.text.strip()
         except Exception as e:
@@ -444,13 +444,13 @@ async def find_doctors(req: DoctorSearchRequest):
 
 
 def translate(text:str,dest:str="en")->str:
-    model = genai.GenerativeModel('models/gemini-1.5-flash')
+    model = genai.GenerativeModel('models/gemini-2.5-flash')
     prompt = f"Translate this to {dest} language:\n\n{text}"
     return model.generate_content(prompt).text.strip()
 
 
 def safe_gpt(question: str, role_prompt: str ="you are a rural health advisor give advice to health related in friendly way.") -> str:
-    model = genai.GenerativeModel('models/gemini-1.5-flash')
+    model = genai.GenerativeModel('models/gemini-2.5-flash')
     prompt = f"{role_prompt}\nQ: {question}"
     response = model.generate_content([prompt])
     return response.text

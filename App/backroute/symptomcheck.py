@@ -40,7 +40,7 @@ def safe_gpt(prompt: str, role_prompt: str = "You are a rural health advisor. Gi
     while attempts < len(API_KEYS):
         try:
             configure_genai()
-            model = genai.GenerativeModel("models/gemini-1.5-flash")
+            model = genai.GenerativeModel("models/gemini-2.5-flash")
             response = model.generate_content([full_prompt])
             return response.text.strip()
         except Exception as e:
@@ -52,12 +52,6 @@ def safe_gpt(prompt: str, role_prompt: str = "You are a rural health advisor. Gi
     
     return "⚠️ All API keys have reached their limits."
 
-
-# def safe_gpt(question: str, role_prompt: str = "You are a rural health advisor. Give safe, simple advice in English only.") -> str:
-#     model = genai.GenerativeModel('models/gemini-1.5-flash')
-#     prompt = f"{role_prompt}\nQ: {question}"
-#     response = model.generate_content([prompt])
-#     return response.text
 
 RED_FLAG_SYMPTOMS = {
     "chest pain": "⚠️ Chest pain can be serious. Please consult a doctor immediately.",

@@ -6,7 +6,7 @@ from langchain.chains import RetrievalQA
 from dotenv import load_dotenv
 import os
 load_dotenv() 
-llm = ChatGoogleGenerativeAI(model="models/gemini-1.5-flash")
+llm = ChatGoogleGenerativeAI(model="models/gemini-2.5-flash")
 
 def create_vector_store(pdf_path):
     print(f"Processing PDF: {pdf_path}")
@@ -51,7 +51,7 @@ Now respond with a clear and easy-to-understand summary:
 
 
 
-    llm = ChatGoogleGenerativeAI(model="models/gemini-1.5-flash", temperature=0.3)
+    llm = ChatGoogleGenerativeAI(model="models/gemini-2.5-flash", temperature=0.3)
     response = llm.invoke(prompt)
 
     return response.content
